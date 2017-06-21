@@ -290,6 +290,8 @@ _ccsg.Node.RenderCmd.prototype = {
             }
         }
 
+        this._dirtyFlag &= ~dirtyFlags.transformDirty;
+
         if (node._onTransformChanged) {
             node._onTransformChanged.call(node._onTransformChangedTarget, t, wt);
         }
@@ -484,7 +486,6 @@ _ccsg.Node.RenderCmd.prototype = {
         if (locFlag & dirtyFlags.transformDirty) {
             //update the transform
             this.transform(this.getParentRenderCmd(), true);
-            this._dirtyFlag &= ~dirtyFlags.transformDirty;
         }
     },
 
