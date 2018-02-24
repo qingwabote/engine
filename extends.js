@@ -40,6 +40,7 @@ else {
     if (!CC_JSB) {
         require('./cocos2d/actions');
         require('./external/chipmunk/chipmunk');
+        require('./extensions/effekseer/effectnode');
     }
 }
 
