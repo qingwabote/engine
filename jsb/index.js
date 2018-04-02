@@ -45,7 +45,8 @@ defineMacro('CC_DEBUG', true);  // CC_DEV || Debug Build
 defineMacro('CC_JSB', defined('jsb'));
 defineMacro('CC_BUILD', false);
 defineMacro('CC_WECHATGAME', false);
-defineMacro('CC_SUPPORT_JIT', !CC_WECHATGAME);
+defineMacro('CC_QQPLAY', false);
+defineMacro('CC_SUPPORT_JIT', !(CC_WECHATGAME || CC_QQPLAY));
 
 
 if (!cc.ClassManager) {
