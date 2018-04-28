@@ -104,6 +104,24 @@ sp._SGSkeleton = _ccsg.Node.extend({
     },
 
     /**
+     * Set the flip x of sp._SGSkeleton.
+     * @param {boolean} flipX
+     */
+    setFlipX: function(flip) {
+        this._skeleton.flipX = flip;
+        this._skeleton.updateWorldTransform();
+    },
+
+    /**
+     * Set the flip y of sp._SGSkeleton.
+     * @param {boolean} flipY
+     */
+    setFlipY: function(flip) {
+        this._skeleton.flipY = flip;
+        this._skeleton.updateWorldTransform();
+    },
+
+    /**
      * Initializes sp._SGSkeleton with Data.
      * @param {sp.spine.SkeletonData|String} skeletonDataFile
      * @param {String|spine.Atlas|spine.SkeletonData} atlasFile atlas filename or atlas data or owns SkeletonData

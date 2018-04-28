@@ -353,6 +353,46 @@ sp.Skeleton = cc.Class({
         },
 
         /**
+         * !#en Indicates whether spSkeleton flipX.
+         * !#zh 是否翻转x方向。
+         * @property {Boolean} flipX
+         * @default false
+         */
+        _flipX: false,
+        flipX: {
+            get: function() {
+                return this._flipX;
+            },
+            set: function (value) {
+                this._flipX = value;
+                if (this._sgNode) {
+                    this._sgNode.setFlipX(value);
+                }
+            },
+            tooltip: CC_DEV && 'i18n:COMPONENT.skeleton.flip_x'
+        },
+
+                /**
+         * !#en Indicates whether spSkeleton flipY.
+         * !#zh 是否翻转y方向。
+         * @property {Boolean} flipY
+         * @default false
+         */
+        _flipY: false,
+        flipY: {
+            get: function() {
+                return this._flipY;
+            },
+            set: function (value) {
+                this._flipY = value;
+                if (this._sgNode) {
+                    this._sgNode.setFlipY(value);
+                }
+            },
+            tooltip: CC_DEV && 'i18n:COMPONENT.skeleton.flip_y'
+        },
+
+        /**
          * !#en Indicates whether open debug slots.
          * !#zh 是否显示 slot 的 debug 信息。
          * @property {Boolean} debugSlots
@@ -485,6 +525,8 @@ sp.Skeleton = cc.Class({
         }
 
         sgNode.setPremultipliedAlpha(this._premultipliedAlpha);
+        sgNode.setFlipX(this._flipX);
+        sgNode.setFlipY(this._flipY);
 
         this.animation = this.defaultAnimation;
         if (CC_EDITOR) {
