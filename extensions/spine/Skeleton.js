@@ -430,32 +430,11 @@ sp.Skeleton = cc.Class({
     _createSgNode: function () {
         var skeletonData = this.skeletonData;
         if (skeletonData/* && self.atlasFile*/) {
+            var data = skeletonData.getRuntimeData();
             if (CC_JSB) {
-                var uuid = skeletonData._uuid;
-                if ( !uuid ) {
-                    cc.errorID(7504);
-                    return null;
-                }
-                var jsonFile = skeletonData.nativeUrl;
-                var atlasText = skeletonData.atlasText;
-                if (!atlasText) {
-                    cc.errorID(7508, skeletonData.name);
-                    return null;
-                }
-                var texValues = skeletonData.textures;
-                var texKeys = skeletonData.textureNames;
-                if ( !(texValues && texValues.length > 0 && texKeys && texKeys.length > 0) ) {
-                    cc.errorID(7507, skeletonData.name);
-                    return null;
-                }
-                var textures = {};
-                for (var i = 0; i < texValues.length; ++i) {
-                    textures[texKeys[i]] = texValues[i];
-                }
-
                 var sgNode = new sp._SGSkeletonAnimation();
                 try {
-                    sp._initSkeletonRenderer(sgNode, jsonFile, atlasText, textures, skeletonData.scale);
+                    sp._initSkeletonRenderer(sgNode, data);
                 }
                 catch (e) {
                     cc._throw(e);
@@ -464,7 +443,6 @@ sp.Skeleton = cc.Class({
                 return sgNode;
             }
             else {
-                var data = skeletonData.getRuntimeData();
                 if (data) {
                     try {
                         return new sp._SGSkeletonAnimation(data, null, skeletonData.scale);

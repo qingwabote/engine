@@ -154,7 +154,7 @@ var SkeletonData = cc.Class({
      * @param {Boolean} [quiet=false]
      * @return {sp.spine.SkeletonData}
      */
-    getRuntimeData: !CC_JSB && function (quiet) {
+    getRuntimeData: function (quiet) {
         if (this._skeletonCache) {
             return this._skeletonCache;
         }
@@ -167,17 +167,34 @@ var SkeletonData = cc.Class({
             return null;
         }
 
-        var atlas = this._getAtlas(quiet);
-        if (! atlas) {
-            return null;
-        }
-        var attachmentLoader = new sp.spine.AtlasAttachmentLoader(atlas);
-        var jsonReader = new sp.spine.SkeletonJson(attachmentLoader);
-        jsonReader.scale = this.scale;
+        if (!CC_JSB) {
+            var atlas = this._getAtlas(quiet);
+            if (! atlas) {
+                return null;
+            }
+            var attachmentLoader = new sp.spine.AtlasAttachmentLoader(atlas);
+            var jsonReader = new sp.spine.SkeletonJson(attachmentLoader);
+            jsonReader.scale = this.scale;
+    
+            var json = this.skeletonJson;
+            this._skeletonCache = jsonReader.readSkeletonData(json);
+            atlas.dispose(jsonReader);
+        } else {
+            if ( !this._uuid ) {
+                cc.errorID(7504);
+                return null;
+            }
+            if (!this.atlasText) {
+                cc.errorID(7508, this.name);
+                return null;
+            }
+            var textures = {};
+            for (var i = 0; i < this.textures.length; ++i) {
+                textures[this.textureNames[i]] = this.textures[i];
+            }
 
-        var json = this.skeletonJson;
-        this._skeletonCache = jsonReader.readSkeletonData(json);
-        atlas.dispose(jsonReader);
+            this._skeletonCache = new sp.SGSkeletonData(this.nativeUrl, this.atlasText, textures, this.scale);
+        }
 
         return this._skeletonCache;
     },
