@@ -340,6 +340,46 @@ sp.Skeleton = cc.Class({
         },
 
         /**
+         * !#en Indicates whether spSkeleton flipX.
+         * !#zh 是否翻转x方向。
+         * @property {Boolean} flipX
+         * @default false
+         */
+        _flipX: false,
+        flipX: {
+            get: function() {
+                return this._flipX;
+            },
+            set: function (value) {
+                this._flipX = value;
+                if (this._sgNode) {
+                    this._sgNode.setFlipX(value);
+                }
+            },
+            tooltip: CC_DEV && 'i18n:COMPONENT.skeleton.flip_x'
+        },
+
+                /**
+         * !#en Indicates whether spSkeleton flipY.
+         * !#zh 是否翻转y方向。
+         * @property {Boolean} flipY
+         * @default false
+         */
+        _flipY: false,
+        flipY: {
+            get: function() {
+                return this._flipY;
+            },
+            set: function (value) {
+                this._flipY = value;
+                if (this._sgNode) {
+                    this._sgNode.setFlipY(value);
+                }
+            },
+            tooltip: CC_DEV && 'i18n:COMPONENT.skeleton.flip_y'
+        },
+
+        /**
          * !#en Indicates whether open debug slots.
          * !#zh 是否显示 slot 的 debug 信息。
          * @property {Boolean} debugSlots
@@ -390,32 +430,11 @@ sp.Skeleton = cc.Class({
     _createSgNode: function () {
         var skeletonData = this.skeletonData;
         if (skeletonData/* && self.atlasFile*/) {
+            var data = skeletonData.getRuntimeData();
             if (CC_JSB) {
-                var uuid = skeletonData._uuid;
-                if ( !uuid ) {
-                    cc.errorID(7504);
-                    return null;
-                }
-                var jsonFile = cc.loader.md5Pipe ? cc.loader.md5Pipe.transformURL(skeletonData.nativeUrl, true) : skeletonData.nativeUrl;
-                var atlasText = skeletonData.atlasText;
-                if (!atlasText) {
-                    cc.errorID(7508, skeletonData.name);
-                    return null;
-                }
-                var texValues = skeletonData.textures;
-                var texKeys = skeletonData.textureNames;
-                if ( !(texValues && texValues.length > 0 && texKeys && texKeys.length > 0) ) {
-                    cc.errorID(7507, skeletonData.name);
-                    return null;
-                }
-                var textures = {};
-                for (var i = 0; i < texValues.length; ++i) {
-                    textures[texKeys[i]] = texValues[i];
-                }
-
                 var sgNode = new sp._SGSkeletonAnimation();
                 try {
-                    sp._initSkeletonRenderer(sgNode, jsonFile, atlasText, textures, skeletonData.scale);
+                    sp._initSkeletonRenderer(sgNode, data);
                 }
                 catch (e) {
                     cc._throw(e);
@@ -424,7 +443,6 @@ sp.Skeleton = cc.Class({
                 return sgNode;
             }
             else {
-                var data = skeletonData.getRuntimeData();
                 if (data) {
                     try {
                         return new sp._SGSkeletonAnimation(data, null, skeletonData.scale);
@@ -485,6 +503,8 @@ sp.Skeleton = cc.Class({
         }
 
         sgNode.setPremultipliedAlpha(this._premultipliedAlpha);
+        sgNode.setFlipX(this._flipX);
+        sgNode.setFlipY(this._flipY);
 
         this.animation = this.defaultAnimation;
         if (CC_EDITOR) {
