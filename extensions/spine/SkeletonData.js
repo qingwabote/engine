@@ -199,6 +199,54 @@ var SkeletonData = cc.Class({
         return this._skeletonCache;
     },
 
+    getRuntimeDataAsync: function (quiet, completeHandler) {
+        if (this._skeletonCache) {
+            completeHandler(this._skeletonCache);
+            return;
+        }
+
+
+        if ( !(this.textures && this.textures.length > 0 && this.textureNames && this.textureNames.length > 0) ) {
+            if ( !quiet ) {
+                cc.errorID(7507, this.name);
+            }
+            return;
+        }
+
+        if (!CC_JSB) {
+            var atlas = this._getAtlas(quiet);
+            if (! atlas) {
+                return;
+            }
+            var attachmentLoader = new sp.spine.AtlasAttachmentLoader(atlas);
+            var jsonReader = new sp.spine.SkeletonJson(attachmentLoader);
+            jsonReader.scale = this.scale;
+    
+            var json = this.skeletonJson;
+            this._skeletonCache = jsonReader.readSkeletonData(json);
+            atlas.dispose(jsonReader);
+            completeHandler(this._skeletonCache);
+        } else {
+            if ( !this._uuid ) {
+                cc.errorID(7504);
+                return;
+            }
+            if (!this.atlasText) {
+                cc.errorID(7508, this.name);
+                return;
+            }
+            var textures = {};
+            for (var i = 0; i < this.textures.length; ++i) {
+                textures[this.textureNames[i]] = this.textures[i];
+            }
+
+            new sp.SGSkeletonData(this.nativeUrl, this.atlasText, textures, this.scale, (data) => {
+                this._skeletonCache = data;
+                completeHandler(this._skeletonCache);
+            });
+        }
+    },
+
     // EDITOR
 
     getSkinsEnum: CC_EDITOR && function () {
