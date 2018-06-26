@@ -193,7 +193,12 @@ var SkeletonData = cc.Class({
                 textures[this.textureNames[i]] = this.textures[i];
             }
 
-            this._skeletonCache = new sp.SGSkeletonData(this.nativeUrl, this.atlasText, textures, this.scale);
+            let raw = cc.url.raw("resources/" + this.url_ + ".skel");
+            if (!jsb.fileUtils.isFileExist(raw)) {//if there is no .skel, use .json instead
+                raw = this.nativeUrl
+            }
+
+            this._skeletonCache = new sp.SGSkeletonData(raw, this.atlasText, textures, this.scale);
         }
 
         return this._skeletonCache;
