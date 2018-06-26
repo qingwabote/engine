@@ -330,6 +330,10 @@ var AssetLibrary = {
 
         // init cc.url
         cc.url._init((options.mountPaths && options.mountPaths.assets) || _rawAssetsBase + 'assets');
+    },
+
+    get_uuidToRawAsset: function (uuid) {
+        return _uuidToRawAsset;
     }
 };
 

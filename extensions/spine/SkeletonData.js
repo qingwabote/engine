@@ -193,7 +193,9 @@ var SkeletonData = cc.Class({
                 textures[this.textureNames[i]] = this.textures[i];
             }
 
-            let raw = cc.url.raw("resources/" + this.url_ + ".skel");
+            let info = cc.AssetLibrary.get_uuidToRawAsset()[this._uuid];
+            //info.url likes: assets/role/101042.json
+            var raw = cc.url.raw("resources/" + info.url.substring(7, info.url.length - 5) + ".skel");
             if (!jsb.fileUtils.isFileExist(raw)) {//if there is no .skel, use .json instead
                 raw = this.nativeUrl
             }
@@ -245,7 +247,9 @@ var SkeletonData = cc.Class({
                 textures[this.textureNames[i]] = this.textures[i];
             }
 
-            let raw = cc.url.raw("resources/" + this.url_ + ".skel");
+            let info = cc.AssetLibrary.get_uuidToRawAsset()[this._uuid];
+            //info.url likes: assets/role/101042.json
+            var raw = cc.url.raw("resources/" + info.url.substring(7, info.url.length - 5) + ".skel");
             if (!jsb.fileUtils.isFileExist(raw)) {//if there is no .skel, use .json instead
                 raw = this.nativeUrl
             }

@@ -462,7 +462,6 @@ proto.loadRes = function (url, type, progressCallback, completeCallback) {
                     // should not release these assets, even if they are static referenced in the scene.
                     self.setAutoReleaseRecursively(uuid, false);
                 }
-                asset.url_ = url;
                 if (completeCallback) {
                     completeCallback(err, asset);
                 }
@@ -498,7 +497,6 @@ proto._loadResUuids = function (uuids, progressCallback, completeCallback, urls)
                         if (urlRes) {
                             urlRes.push(urls[i]);
                         }
-                        item.url_ = urls[i];
                     }
                 }
                 if (urls) {
@@ -579,7 +577,7 @@ proto.loadResArray = function (urls, type, progressCallback, completeCallback) {
             return;
         }
     }
-    this._loadResUuids(uuids, progressCallback, completeCallback, urls);
+    this._loadResUuids(uuids, progressCallback, completeCallback);
 };
 
 /**
