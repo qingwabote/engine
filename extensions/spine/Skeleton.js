@@ -432,15 +432,17 @@ sp.Skeleton = cc.Class({
         if (skeletonData/* && self.atlasFile*/) {
             var data = skeletonData.getRuntimeData();
             if (CC_JSB) {
-                var sgNode = new sp._SGSkeletonAnimation();
-                try {
-                    sp._initSkeletonRenderer(sgNode, data);
+                if (data) {
+                    var sgNode = new sp._SGSkeletonAnimation();
+                    try {
+                        sp._initSkeletonRenderer(sgNode, data);
+                    }
+                    catch (e) {
+                        cc._throw(e);
+                        return null;
+                    }
+                    return sgNode;
                 }
-                catch (e) {
-                    cc._throw(e);
-                    return null;
-                }
-                return sgNode;
             }
             else {
                 if (data) {

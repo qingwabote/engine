@@ -155,10 +155,14 @@ var SkeletonData = cc.Class({
      * @return {sp.spine.SkeletonData}
      */
     getRuntimeData: function (quiet) {
+        if (this._skeletonDataLoading) {
+            console.log("SkeletonData getRuntimeDataAsync has not been finished!", this.name)
+            return null;
+        }
+
         if (this._skeletonCache) {
             return this._skeletonCache;
         }
-
 
         if ( !(this.textures && this.textures.length > 0 && this.textureNames && this.textureNames.length > 0) ) {
             if ( !quiet ) {
@@ -207,8 +211,15 @@ var SkeletonData = cc.Class({
     },
 
     getRuntimeDataAsync: function (quiet, completeHandler) {
+        this._getRuntimeDataCallback = completeHandler;
+
+        if (this._skeletonDataLoading) {
+            console.log("SkeletonData getRuntimeDataAsync has already been called!", this.name)
+            return;
+        }
+
         if (this._skeletonCache) {
-            completeHandler(this._skeletonCache);
+            this._getRuntimeDataCallback(this._skeletonCache);
             return;
         }
 
@@ -232,7 +243,7 @@ var SkeletonData = cc.Class({
             var json = this.skeletonJson;
             this._skeletonCache = jsonReader.readSkeletonData(json);
             atlas.dispose(jsonReader);
-            completeHandler(this._skeletonCache);
+            this._getRuntimeDataCallback(this._skeletonCache);
         } else {
             if ( !this._uuid ) {
                 cc.errorID(7504);
@@ -254,9 +265,10 @@ var SkeletonData = cc.Class({
                 raw = this.nativeUrl
             }
 
-            new sp.SGSkeletonData(raw, this.atlasText, textures, this.scale, (data) => {
-                this._skeletonCache = data;
-                completeHandler(this._skeletonCache);
+            this._skeletonDataLoading = new sp.SGSkeletonData(raw, this.atlasText, textures, this.scale, () => {
+                this._skeletonCache = this._skeletonDataLoading;
+                this._skeletonDataLoading = null;
+                this._getRuntimeDataCallback(this._skeletonCache);
             });
         }
     },
